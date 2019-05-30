@@ -2,17 +2,21 @@
 function objFactory(spec) {
     /* 
      * Call any important constructors and extract only the contextually
-     * important members and methods. This allows for multiple inheritance.
+     * important members and methods. This allows for multiple inheritance
+     * if you decide you need to pull from multiple constructors (we are
+     * only using the one below for this example).
      */
-    const { mixin2: mixin2, var1: otherVar1 } = anotherObjFactory({
-        example1: 1,
-        example2: 2
+    const { mixin2: _mixin2, var1: otherVar1 } = anotherObjFactory({
+        foo: 1,
+        bar: 2
     });
     /*
      * Extract the values passed in with the object and assign them accordingly.
      *
      * Important to know:
      * There is no way to dynamically set default values without using `this`.
+     * One of the major reasons for using this approach to create objects is
+     * it PREVENTS you from having to use `this` for safety reasons.
      */
     let { example1: var1, example2: var2 } = spec;
 
@@ -20,13 +24,13 @@ function objFactory(spec) {
      * Create all other necessary local variables. Make sure all functions
      * are labeled const.
      */
-    let var3;
-    let var4;
-    let var5;
+    let _var3;
+    let _var4;
+    let _var5;
     const NAME = 'Rorschach';
     
     const addVar3 = function (value) {
-        return (value + var3);
+        return (value + _var3);
     };
     
     /*
@@ -37,9 +41,17 @@ function objFactory(spec) {
      * The object being passed in will contain the variables
      * and methods you wish to make public. Everthing that
      * is not contained in the object literal will be private.
+     *
+     * As for the private variables, they all begin with an underscore "_"
+     * to tell YOU that they are private. Simply placing the underscore
+     * at the beginning does NOT make it private, it's a style choice.
+     * This also means that you have to be very deliberate when changing
+     * a variable from public to private and vice versa. Your object literal
+     * should NEVER have a variable starting with an underscore.
      */
     return Object.freeze({
         var1,
+        otherVar1,
         var2,
         addVar3,
         NAME
@@ -55,13 +67,13 @@ function objFactory(spec) {
  * this factory.
  */
 function anotherObjFactory(spec) {
-    let { example1: mixin1, example2: mixin2 } = spec;
-    let minxin3;
+    let { foo: _mixin1, bar: mixin2 } = spec;
+    let _minxin3;
     let var1 = 1;
     const NAME = 'Bob';
     
-    const mixinMethod = function (value) {
-        return (value + var3);
+    const _mixinMethod = function (value) {
+        return (value + var1);
     };
     
     return Object.freeze({
