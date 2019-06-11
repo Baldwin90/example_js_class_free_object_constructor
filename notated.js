@@ -1,5 +1,9 @@
 // Pass in an object literal so you can basically have named arguments
-function objFactory(spec) {
+/*
+ * Extract the values passed in with the object and assign them accordingly.
+ * This example sets _var3 with a default value of 6.
+ */
+function objFactory({var1, _var2, _var3 = 6}) {
     /* 
      * Call any important constructors and extract only the contextually
      * important members and methods. This allows for multiple inheritance
@@ -8,23 +12,13 @@ function objFactory(spec) {
      */
     const { mixin2: _mixin2, var1: otherVar1 } = anotherObjFactory({
         foo: 1,
-        bar: 2
+        bar: 2,
     });
-    /*
-     * Extract the values passed in with the object and assign them accordingly.
-     *
-     * Important to know:
-     * There is no way to dynamically set default values without using `this`.
-     * One of the major reasons for using this approach to create objects is
-     * it PREVENTS you from having to use `this` for safety reasons.
-     */
-    let { example1: var1, example2: var2 } = spec;
 
     /*
      * Create all other necessary local variables. Make sure all functions
      * are labeled const.
      */
-    let _var3;
     let _var4;
     let _var5;
     const NAME = 'Rorschach';
@@ -52,9 +46,8 @@ function objFactory(spec) {
     return Object.freeze({
         var1,
         otherVar1,
-        var2,
         addVar3,
-        NAME
+        NAME,
     });
 }
 
@@ -66,8 +59,7 @@ function objFactory(spec) {
  * you won't have to sacrifice pulling that information from
  * this factory.
  */
-function anotherObjFactory(spec) {
-    let { foo: _mixin1, bar: mixin2 } = spec;
+function anotherObjFactory({foo: _mixin1, bar: mixin2}) {
     let _minxin3;
     let var1 = 1;
     const NAME = 'Bob';
@@ -79,14 +71,14 @@ function anotherObjFactory(spec) {
     return Object.freeze({
         mixin2,
         var1,
-        NAME
+        NAME,
     });
 }
 
 
 let newObj = objFactory({
     example2: 2,
-    example1: 1
+    example1: 1,
 });
 
 console.log(newObj.NAME);
